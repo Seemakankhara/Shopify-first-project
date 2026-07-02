@@ -1,0 +1,26 @@
+{
+    "name": "mayank-parmar",
+    "version": "1.0.0",
+    "description": "",
+    "config": {
+      "store": "seema-test-bacbehwm",
+      "dev_theme": "162891825371",
+      "prod_theme": "162891825371"
+    },
+    "scripts": {
+      "info": "shopify theme info",
+      "logout": "shopify auth logout",
+      "login": "shopify theme dev -s %npm_package_config_store%",
+      "dev": "shopify theme dev -s %npm_package_config_store%  -t %npm_package_config_dev_theme% --ignore \"config/*.json\" --ignore \"templates/**/*.json\" --ignore \"sections/*.json \" --path ./theme",
+      "shopify-pull-json-live": "shopify theme pull -t %npm_package_config_prod_theme% --only templates/**/*.json --only templates/*.json --only config/*.json --only sections/*.json --only locales/*.json --path ./theme",
+      "shopify-pull-live": "shopify theme pull -t %npm_package_config_prod_theme% --ignore \"config/*.json\" --ignore \"templates/**/*.json\" --ignore \"sections/*.json \" --path ./theme",
+      "shopify-push-json-live": "shopify theme push -t %npm_package_config_prod_theme% --only templates/**/*.json --only config/*.json --only sections/*.json --only locales/*.json --path ./theme",
+      "shopify-push-live": "shopify theme push -t %npm_package_config_prod_theme%  --allow-live --ignore \"config/*.json\" --ignore \"templates/**/*.json\" --ignore \"sections/*.json \" --path ./theme",
+      "shopify-pull": "shopify theme pull -t %npm_package_config_dev_theme% --ignore \"config/*.json\" --ignore \"templates/**/*.json\" --ignore \"sections/*.json \" --path ./theme",
+      "shopify-push-json": "shopify theme push -t %npm_package_config_dev_theme% --only templates/**/*.json --only config/*.json --only sections/*.json --only locales/*.json --path ./theme",
+      "shopify-push": "shopify theme push -t %npm_package_config_dev_theme% --ignore \"config/*.json\" --ignore \"templates/**/*.json\" --ignore \"sections/*.json \" --path ./theme",
+      "shopify-pull-json": "shopify theme pull -t %npm_package_config_dev_theme% --only templates/**/*.json --only templates/*.json --only config/*.json --only sections/*.json --only locales/*.json --path ./theme"
+    },
+    "author": "Mayank Parmar",
+    "license": "ISC"
+  }
