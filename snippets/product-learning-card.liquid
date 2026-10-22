@@ -1,0 +1,41 @@
+
+<div class="product-card">
+  {% if product.featured_image %}
+    <a
+      class="product-card__image-link"
+      href="{{ product.url }}"
+      aria-label="{{ product.title | escape }}"
+    >
+      {{
+        product.featured_image
+        | image_url: width: 800
+        | image_tag:
+          widths: '200, 300, 400, 600, 800',
+          sizes: '(min-width: 990px) 25vw, (min-width: 750px) 33vw, 50vw',
+          alt: product.featured_image.alt
+      }}
+    </a>
+  {% endif %}
+
+  <h3>
+    <a
+      class="product-card__title-link"
+      href="{{ product.url }}"
+    >
+      {{ product.title | escape }}
+    </a>
+  </h3>
+
+  {% if show_price %}
+    <p class="product-card__price">
+      {{ product.price | money }}
+    </p>
+  {% endif %}
+
+  <a
+    class="product-card__cta"
+    href="{{ product.url }}"
+  >
+    {{ button_label | default: 'View Product' | escape }}
+  </a>
+</div>
