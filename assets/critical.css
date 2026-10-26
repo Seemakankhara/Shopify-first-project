@@ -115,3 +115,18 @@ body {
 .shopify-section > .full-width {
   grid-column: 1 / -1;
 }
+/* Full-width hero section */
+.shopify-section:has(> .hero-banner) {
+  grid-column: 1 / -1;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.hero-banner {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 32px;
+}

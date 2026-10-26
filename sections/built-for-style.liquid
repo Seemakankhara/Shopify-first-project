@@ -1,0 +1,143 @@
+
+<section class="fitness-section">
+  <div class="fitness-benefits__wrapper">
+
+    {% if section.settings.fitness_eyebrow != blank %}
+      <p class="fitness-banner__eyebrow">
+        {{ section.settings.fitness_eyebrow | escape }}
+      </p>
+    {% endif %}
+
+    {% if section.settings.fitness_heading != blank %}
+      <h2 class="fitness-banner__heading">
+        {{ section.settings.fitness_heading | escape }}
+      </h2>
+    {% endif %}
+
+    {% if section.settings.fitness_description != blank
+      or section.settings.fitness_image != blank
+    %}
+      <div class="fitness-sub__section">
+
+        {% if section.settings.fitness_description != blank %}
+          <div class="fitness-banner__description">
+            {{ section.settings.fitness_description }}
+          </div>
+        {% endif %}
+
+        {% if section.settings.fitness_image != blank %}
+          <div class="fitness-banner__image">
+            {{
+              section.settings.fitness_image
+              | image_url: width: 1200
+              | image_tag:
+                widths: '400, 600, 800, 1200',
+                sizes: '(min-width: 750px) 50vw, 100vw',
+                alt: section.settings.fitness_image.alt
+            }}
+          </div>
+        {% endif %}
+
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% stylesheet %}
+  .fitness-section {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 56px 24px;
+    background: #f6f6f3;
+  }
+
+  .fitness-benefits__wrapper {
+    width: min(100%, 1200px);
+    margin-inline: auto;
+  }
+
+  .fitness-banner__eyebrow {
+    margin: 0 0 12px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .fitness-banner__heading {
+    margin: 0 0 28px;
+    font-size: clamp(30px, 4vw, 48px);
+    line-height: 1.15;
+  }
+
+  .fitness-sub__section {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: center;
+    gap: 40px;
+  }
+
+  .fitness-banner__description {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .fitness-banner__description p {
+    margin: 0;
+  }
+
+  .fitness-banner__image img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .fitness-section {
+      padding: 36px 20px;
+    }
+
+    .fitness-sub__section {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Built for Style",
+  "settings": [
+    {
+      "type": "text",
+      "id": "fitness_eyebrow",
+      "label": "Small heading",
+      "default": "BUILT FOR EVERY LIFESTYLE"
+    },
+    {
+      "type": "text",
+      "id": "fitness_heading",
+      "label": "Main heading",
+      "default": "Fitness Wearables"
+    },
+    {
+      "type": "richtext",
+      "id": "fitness_description",
+      "label": "Description",
+      "default": "<p>Track Every Move And Power Every Workout With Smart Wearables And Immersive Sound Built For Your Active Lifestyle.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "fitness_image",
+      "label": "Fitness Image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Fitness Banner"
+    }
+  ]
+}
+{% endschema %}

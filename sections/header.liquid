@@ -1,7 +1,7 @@
 
 <header class="site-header">
   <div class="site-header__inner">
-    <div class="site-header__brand">
+    <div class="site-header__brand" style="--header-logo-width: {{ section.settings.logo_width }}px;">
       <a
         href="{{ routes.root_url }}"
         class="site-header__brand-link"
@@ -155,11 +155,11 @@
   }
 
   .site-header__logo-image {
-    display: block;
-    width: auto;
-    max-width: min({{ section.settings.logo_width }}px, 100%);
-    height: auto;
-  }
+  display: block;
+  width: auto;
+  max-width: min(var(--header-logo-width, 160px), 100%);
+  height: auto;
+}
 
   .site-header__navigation {
     display: flex;
