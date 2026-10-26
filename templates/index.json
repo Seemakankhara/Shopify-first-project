@@ -7,14 +7,28 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
+
 {
   "sections": {
     "main": {
       "type": "hello-world",
       "settings": {}
+    },
+    "product_learning_grid": {
+      "type": "product-learning-grid",
+      "settings": {
+        "heading": "Featured Products",
+        "collection": "learning-products",
+        "products_to_show": 3,
+        "columns": 3,
+        "show_price": true,
+        "button_label": "View Product"
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "product_learning_grid"
   ]
 }
+
