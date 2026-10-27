@@ -23,7 +23,26 @@
         "columns": 3,
         "show_price": true,
         "button_label": "View Product"
+      },
+      "store_benefits": {
+  "type": "store-benefits",
+  "settings": {},
+  "blocks": {
+    "benefit_1": {
+      "type": "benefit",
+      "settings": {
+        "icon": "shipping",
+        "heading": "Free Shipping",
+        "description": "On qualifying orders"
       }
+    }
+  },
+  "block_order": ["benefit_1"]
+},
+"fitness_banner": {
+  "type": "fitness-banner",
+  "settings": {}
+}
     }
   },
   "order": [
