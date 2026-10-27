@@ -1,50 +1,272 @@
-{% comment %}
-  This section is used in the product template to render product page with
-  media, content, and add-to-cart form.
 
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/product
+{% comment %}
+  Soundora product detail section.
+  Uses Shopify's native product form and variant data.
 {% endcomment %}
 
-<div class="product-images">
-  {% for image in product.images %}
-    {% render 'image', class: 'product-image', image: image %}
-  {% endfor %}
-</div>
+{% assign current_variant = product.selected_or_first_available_variant %}
 
-<div class="product-info">
-  <h1>{{ product.title }}</h1>
-  <p>{{ product.price | money }}</p>
-  <p>{{ product.description }}</p>
-</div>
+<section class="soundora-product">
+  <div class="soundora-product__layout">
 
-<div class="product-form">
-  {% form 'product', product %}
-    {% assign current_variant = product.selected_or_first_available_variant %}
-
-    <select name="id">
-      {% for variant in product.variants %}
-        <option
-          value="{{ variant.id }}"
-          {% if variant == current_variant %}
-            selected="selected"
-          {% endif %}
-        >
-          {{ variant.title }} - {{ variant.price | money }}
-        </option>
+    <div class="soundora-product__gallery">
+      {% for image in product.images %}
+        <div class="soundora-product__image">
+          {{
+            image
+            | image_url: width: 1200
+            | image_tag:
+              widths: '400, 600, 800, 1200',
+              sizes: '(min-width: 990px) 55vw, 100vw',
+              loading: 'lazy',
+              alt: image.alt
+          }}
+        </div>
       {% endfor %}
-    </select>
+    </div>
 
-    <input type="text" name="quantity" min="1" value="1">
+    <div class="soundora-product__details">
+      {% if product.vendor != blank %}
+        <p class="soundora-product__vendor">
+          {{ product.vendor | escape }}
+        </p>
+      {% endif %}
 
-    <input type="submit" value="Add to cart">
-    {{ form | payment_button }}
-  {% endform %}
-</div>
+      <h1 class="soundora-product__title">
+        {{ product.title | escape }}
+      </h1>
+
+      <p class="soundora-product__price">
+        {{ current_variant.price | money }}
+      </p>
+
+      {% if current_variant.compare_at_price > current_variant.price %}
+        <p class="soundora-product__compare-price">
+          <s>{{ current_variant.compare_at_price | money }}</s>
+        </p>
+      {% endif %}
+
+      <div class="soundora-product__description">
+        {{ product.description }}
+      </div>
+
+      {% form 'product', product, id: 'SoundoraProductForm' %}
+        <input
+          type="hidden"
+          name="id"
+          value="{{ current_variant.id }}"
+        >
+
+        {% if product.has_only_default_variant == false %}
+          <label for="SoundoraVariant">
+            Options
+          </label>
+
+          <select
+            id="SoundoraVariant"
+            name="id"
+            class="soundora-product__select"
+          >
+            {% for variant in product.variants %}
+              <option
+                value="{{ variant.id }}"
+                {% if variant.id == current_variant.id %}
+                  selected
+                {% endif %}
+                {% unless variant.available %}
+                  disabled
+                {% endunless %}
+              >
+                {{ variant.title | escape }}
+                — {{ variant.price | money }}
+                {% unless variant.available %}
+                  (Sold out)
+                {% endunless %}
+              </option>
+            {% endfor %}
+          </select>
+        {% endif %}
+
+        <label for="SoundoraQuantity">
+          Quantity
+        </label>
+
+        <input
+          id="SoundoraQuantity"
+          class="soundora-product__quantity"
+          type="number"
+          name="quantity"
+          min="1"
+          value="1"
+          inputmode="numeric"
+        >
+
+        <button
+          type="submit"
+          name="add"
+          class="soundora-product__add-button"
+          {% unless current_variant.available %}
+            disabled
+          {% endunless %}
+        >
+          {% if current_variant.available %}
+            Add to cart
+          {% else %}
+            Sold out
+          {% endif %}
+        </button>
+
+        {% if section.settings.show_dynamic_checkout %}
+          {{ form | payment_button }}
+        {% endif %}
+      {% endform %}
+    </div>
+
+  </div>
+</section>
+
+{% stylesheet %}
+  .soundora-product {
+    padding: 56px 24px;
+    color: var(--brand-text, #202124);
+    background: var(--brand-surface, #ffffff);
+  }
+
+  .soundora-product__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+    gap: clamp(32px, 5vw, 72px);
+    width: min(100%, 1320px);
+    margin-inline: auto;
+    align-items: start;
+  }
+
+  .soundora-product__gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .soundora-product__image {
+    overflow: hidden;
+    border-radius: 8px;
+    background: var(--brand-background, #f6f6f3);
+  }
+
+  .soundora-product__image img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .soundora-product__details {
+    position: sticky;
+    top: 24px;
+  }
+
+  .soundora-product__vendor {
+    margin: 0 0 12px;
+    color: var(--brand-secondary, #38499e);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .soundora-product__title {
+    margin: 0;
+    font-size: clamp(28px, 3vw, 42px);
+    line-height: 1.15;
+    letter-spacing: -0.035em;
+  }
+
+  .soundora-product__price {
+    margin: 20px 0;
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  .soundora-product__compare-price {
+    margin-top: -12px;
+    color: var(--brand-text-muted, #666666);
+  }
+
+  .soundora-product__description {
+    margin: 24px 0;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .soundora-product__select,
+  .soundora-product__quantity {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 48px;
+    margin: 8px 0 20px;
+    padding: 12px;
+    border: 1px solid var(--brand-border, #e8e7e2);
+    border-radius: var(--brand-radius-button, 4px);
+    background: var(--brand-surface, #ffffff);
+    color: var(--brand-text, #202124);
+    font: inherit;
+  }
+
+  .soundora-product__add-button {
+    display: block;
+    width: 100%;
+    min-height: 50px;
+    margin-top: 16px;
+    border: 1px solid var(--brand-button-bg, #252f70);
+    border-radius: var(--brand-radius-button, 4px);
+    background: var(--brand-button-bg, #252f70);
+    color: var(--brand-button-text, #ffffff);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .soundora-product__add-button:hover:not(:disabled) {
+    background: var(--brand-button-hover-bg, #38499e);
+    border-color: var(--brand-button-hover-bg, #38499e);
+  }
+
+  .soundora-product__add-button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  @media screen and (max-width: 749px) {
+    .soundora-product {
+      padding: 32px 16px;
+    }
+
+    .soundora-product__layout {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 32px;
+    }
+
+    .soundora-product__details {
+      position: static;
+    }
+
+    .soundora-product__gallery {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
-  "name": "t:general.product",
-  "settings": [],
+  "name": "Soundora product",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "Show dynamic checkout button",
+      "default": false
+    }
+  ],
   "disabled_on": {
     "groups": ["header", "footer"]
   }
