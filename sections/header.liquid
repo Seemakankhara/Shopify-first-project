@@ -122,9 +122,9 @@
 
 {% stylesheet %}
   .site-header {
-    background: #ffffff;
-    color: #202020;
-    border-bottom: 1px solid #eeeeeb;
+      background: var(--brand-surface);
+  color: var(--brand-text);
+  border-bottom: 1px solid var(--brand-border);
   }
 
   .site-header__inner {
@@ -184,7 +184,7 @@
     bottom: 2px;
     left: 0;
     height: 1px;
-    background: currentColor;
+    background: var(--brand-primary);
     content: "";
     transform: scaleX(0);
     transform-origin: left;
@@ -231,8 +231,8 @@
     padding-inline: 3px;
     place-items: center;
     border-radius: 50%;
-    background: #202020;
-    color: #ffffff;
+    background: var(--brand-primary);
+  color: var(--brand-button-text);
     font-size: 10px;
     line-height: 1;
   }
