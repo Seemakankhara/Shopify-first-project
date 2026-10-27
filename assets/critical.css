@@ -1,6 +1,33 @@
 /** Critical CSS for the theme. This file is included on every page. */
 
 /* Reset styles inspired by https://www.joshwcomeau.com/css/custom-css-reset/ */
+
+
+:root {
+  /* Brand colors */
+  --brand-primary: #252f70;
+  --brand-secondary: #38499e;
+
+  /* Existing neutral palette */
+  --brand-charcoal: #202124;
+  --brand-background: #f6f6f3;
+  --brand-surface: #ffffff;
+  --brand-text: #202124;
+  --brand-text-muted: #666666;
+  --brand-border: #e8e7e2;
+
+  /* Interactive elements */
+  --brand-button-bg: var(--brand-primary);
+  --brand-button-text: #ffffff;
+  --brand-button-hover-bg: var(--brand-secondary);
+  --brand-focus: var(--brand-secondary);
+
+  /* Shared design values */
+  --brand-radius-card: 10px;
+  --brand-radius-button: 4px;
+  --brand-content-width: 1320px;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;

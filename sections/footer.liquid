@@ -4,20 +4,30 @@
 
     <div class="store-footer__main">
 
-      <div class="store-footer__brand">
-        <a
-          class="store-footer__brand-link"
-          href="{{ routes.root_url }}"
-        >
-          {{ shop.name | escape }}
-        </a>
+      
+<div class="store-footer__brand" style="--footer-logo-width: {{ section.settings.footer_logo_width }}px;">
+  <a
+    class="store-footer__brand-link"
+    href="{{ routes.root_url }}"
+    aria-label="{{ shop.name | escape }}"
+  >
+    {% if section.settings.footer_logo != blank %}
+      {{
+        section.settings.footer_logo
+        | image_url: width: 480
+        | image_tag:
+          widths: '120, 180, 240, 360, 480',
+          alt: shop.name,
+          class: 'store-footer__logo-image'
+      }}
+    {% else %}
+      <span class="store-footer__brand-name">
+        {{ shop.name | escape }}
+      </span>
+    {% endif %}
+  </a>
+</div>
 
-        {% if section.settings.description != blank %}
-          <p class="store-footer__description">
-            {{ section.settings.description | escape | newline_to_br }}
-          </p>
-        {% endif %}
-      </div>
 
       <div class="store-footer__navigation">
         <h2 class="store-footer__heading">
@@ -303,7 +313,25 @@
     width: 38px;
     height: auto;
   }
+.store-footer__brand-link {
+  display: inline-flex;
+  align-items: center;
+  color: #ffffff;
+  text-decoration: none;
+}
 
+.store-footer__brand-name {
+  font-size: 25px;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+}
+
+.store-footer__logo-image {
+  display: block;
+  width: auto;
+  max-width: min(var(--footer-logo-width, 160px), 100%);
+  height: auto;
+}
   @media screen and (max-width: 900px) {
     .store-footer__main {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -363,6 +391,23 @@
 {
   "name": "Store footer",
   "settings": [
+    
+{
+  "type": "image_picker",
+  "id": "footer_logo",
+  "label": "Footer logo"
+},
+{
+  "type": "range",
+  "id": "footer_logo_width",
+  "label": "Footer logo width",
+  "min": 80,
+  "max": 300,
+  "step": 10,
+  "unit": "px",
+  "default": 160
+},
+
     {
       "type": "textarea",
       "id": "description",
