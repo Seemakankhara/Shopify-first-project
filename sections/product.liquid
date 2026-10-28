@@ -6,12 +6,18 @@
 
 {% assign current_variant = product.selected_or_first_available_variant %}
 
-<section class="soundora-product">
-  <div class="soundora-product__layout">
+<section
+  id="SoundoraProduct-{{ section.id }}"
+  class="soundora-product"
+>
+  <div class="soundora-product__layout ">
 
     <div class="soundora-product__gallery">
-      {% for image in product.images %}
-        <div class="soundora-product__image">
+     {% for image in product.images %}
+  <div
+    class="soundora-product__image"
+    data-soundora-image-id="{{ image.id }}"
+  >
           {{
             image
             | image_url: width: 1200
@@ -36,28 +42,37 @@
         {{ product.title | escape }}
       </h1>
 
-      <p class="soundora-product__price">
+      <p
+        class="soundora-product__price"
+        data-soundora-price>
         {{ current_variant.price | money }}
       </p>
 
-      {% if current_variant.compare_at_price > current_variant.price %}
-        <p class="soundora-product__compare-price">
-          <s>{{ current_variant.compare_at_price | money }}</s>
+      <p
+          class="soundora-product__compare-price"
+          data-soundora-compare-price
+          {% unless current_variant.compare_at_price > current_variant.price %}
+            hidden
+          {% endunless %}
+        >
+          <s>
+            {% if current_variant.compare_at_price > current_variant.price %}
+              {{ current_variant.compare_at_price | money }}
+            {% endif %}
+          </s>
         </p>
-      {% endif %}
 
       <div class="soundora-product__description">
         {{ product.description }}
       </div>
 
       {% form 'product', product, id: 'SoundoraProductForm' %}
-        <input
-          type="hidden"
-          name="id"
-          value="{{ current_variant.id }}"
-        >
-
-        {% if product.has_only_default_variant == false %}
+       {% if product.has_only_default_variant %}
+          <input
+            type="hidden"
+            name="id"
+            value="{{ current_variant.id }}">
+        {% else %}
           <label for="SoundoraVariant">
             Options
           </label>
@@ -70,15 +85,17 @@
             {% for variant in product.variants %}
               <option
                 value="{{ variant.id }}"
+                data-image-id="{{ variant.featured_image.id }}"
+                data-price="{{ variant.price | money | escape }}"
+                data-compare-price="{% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money | escape }}{% endif %}"
+                data-available="{{ variant.available }}"
                 {% if variant.id == current_variant.id %}
                   selected
                 {% endif %}
-                {% unless variant.available %}
-                  disabled
-                {% endunless %}
               >
                 {{ variant.title | escape }}
                 — {{ variant.price | money }}
+
                 {% unless variant.available %}
                   (Sold out)
                 {% endunless %}
@@ -91,20 +108,22 @@
           Quantity
         </label>
 
-        <input
-          id="SoundoraQuantity"
-          class="soundora-product__quantity"
-          type="number"
-          name="quantity"
-          min="1"
-          value="1"
-          inputmode="numeric"
-        >
+       <input
+        id="SoundoraQuantity"
+        class="soundora-product__quantity"
+        type="number"
+        name="quantity"
+        min="1"
+        step="1"
+        value="1"
+        inputmode="numeric"
+        required
+      >
 
         <button
           type="submit"
           name="add"
-          class="soundora-product__add-button"
+          class="soundora-product__add-button" data-soundora-add-button
           {% unless current_variant.available %}
             disabled
           {% endunless %}
@@ -255,6 +274,99 @@
     }
   }
 {% endstylesheet %}
+
+<script>
+  (() => {
+    const section = document.getElementById(
+      'SoundoraProduct-{{ section.id }}'
+    );
+
+    if (!section) return;
+
+    const variantSelect = section.querySelector(
+      '#SoundoraVariant'
+    );
+
+    const priceElement = section.querySelector(
+      '[data-soundora-price]'
+    );
+
+    const comparePriceElement = section.querySelector(
+      '[data-soundora-compare-price]'
+    );
+
+    const addButton = section.querySelector(
+      '[data-soundora-add-button]'
+    );
+const gallery = section.querySelector(
+  '.soundora-product__gallery'
+);
+    if (
+      !variantSelect ||
+      !priceElement ||
+      !comparePriceElement ||
+      !addButton
+    ) return;
+
+    const updateVariant = () => {
+      const selectedOption =
+        variantSelect.selectedOptions[0];
+
+      if (!selectedOption) return;
+
+      // Update main price
+      priceElement.textContent =
+        selectedOption.dataset.price || '';
+
+      // Update compare-at price
+      const comparePrice =
+        selectedOption.dataset.comparePrice;
+
+      const comparePriceText =
+        comparePriceElement.querySelector('s');
+
+      if (comparePrice) {
+        comparePriceText.textContent = comparePrice;
+        comparePriceElement.hidden = false;
+      } else {
+        comparePriceText.textContent = '';
+        comparePriceElement.hidden = true;
+      }
+
+      // Update product availability
+      const isAvailable =
+        selectedOption.dataset.available === 'true';
+
+      addButton.disabled = !isAvailable;
+
+      addButton.textContent = isAvailable
+        ? 'Add to cart'
+        : 'Sold out';
+        // Move the selected variant image to the first position
+const selectedImageId = selectedOption.dataset.imageId;
+
+if (gallery && selectedImageId) {
+  const matchingImage = Array.from(
+    gallery.querySelectorAll('[data-soundora-image-id]')
+  ).find(image => (
+    image.dataset.soundoraImageId === selectedImageId
+  ));
+
+  if (matchingImage && matchingImage !== gallery.firstElementChild) {
+    gallery.prepend(matchingImage);
+  }
+}
+    };
+
+    variantSelect.addEventListener(
+      'change',
+      updateVariant
+    );
+
+    // Synchronize UI with the initially selected variant
+    updateVariant();
+  })();
+</script>
 
 {% schema %}
 {
