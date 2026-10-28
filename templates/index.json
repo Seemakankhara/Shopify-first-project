@@ -8,11 +8,18 @@
  * ------------------------------------------------------------
  */
 
+
 {
   "sections": {
-    "main": {
-      "type": "hello-world",
-      "settings": {}
+    "hero_banner": {
+      "type": "hero-banner",
+      "settings": {
+        "eyebrow": "YOUR SOUND. YOUR WORLD.",
+        "heading": "Sound that moves with you.",
+        "description": "<p>Discover headphones designed for everyday listening, focused work, and life on the move.</p>",
+        "button_label": "Shop Headphones",
+        "button_link": ""
+      }
     },
     "product_learning_grid": {
       "type": "product-learning-grid",
@@ -23,31 +30,58 @@
         "columns": 3,
         "show_price": true,
         "button_label": "View Product"
+      }
+    },
+    "store_benefits": {
+      "type": "store-benefits",
+      "blocks": {
+        "benefit_1": {
+          "type": "benefit",
+          "settings": {
+            "icon": "shipping",
+            "heading": "Free Shipping",
+            "description": "On qualifying orders"
+          }
+        },
+        "benefit_2": {
+          "type": "benefit",
+          "settings": {
+            "icon": "returns",
+            "heading": "Easy Returns",
+            "description": "A simple return process"
+          }
+        },
+        "benefit_3": {
+          "type": "benefit",
+          "settings": {
+            "icon": "secure",
+            "heading": "Secure Checkout",
+            "description": "Shop with confidence"
+          }
+        }
       },
-      "store_benefits": {
-  "type": "store-benefits",
-  "settings": {},
-  "blocks": {
-    "benefit_1": {
-      "type": "benefit",
+      "block_order": [
+        "benefit_1",
+        "benefit_2",
+        "benefit_3"
+      ],
+      "settings": {}
+    },
+    "fitness_banner": {
+      "type": "built-for-style",
       "settings": {
-        "icon": "shipping",
-        "heading": "Free Shipping",
-        "description": "On qualifying orders"
+        "fitness_eyebrow": "BUILT FOR EVERY LIFESTYLE",
+        "fitness_heading": "Fitness Wearables",
+        "fitness_description": "<p>Track Every Move And Power Every Workout With Smart Wearables And Immersive Sound Built For Your Active Lifestyle.</p>"
       }
     }
   },
-  "block_order": ["benefit_1"]
-},
-"fitness_banner": {
-  "type": "fitness-banner",
-  "settings": {}
-}
-    }
-  },
   "order": [
-    "main",
-    "product_learning_grid"
+    "hero_banner",
+    "product_learning_grid",
+    "store_benefits",
+    "fitness_banner"
   ]
 }
+
 
